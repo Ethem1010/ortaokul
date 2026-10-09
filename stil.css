@@ -231,10 +231,10 @@ table.cizelge { border-collapse: collapse; width: 100%; font-size: .93rem; }
 .olcu > b.kucuk { font-size: 1.05rem; line-height: 1.3; }
 .olcu > span svg { color: var(--ana); }
 /* Saat/süre sütunları dar, yazı sütunu (ör. Program) geniş */
-.cizelge .kisa { width: 1%; min-width: 54px; padding-left: .25rem; padding-right: .25rem; }
+.cizelge .kisa { width: 1%; min-width: 46px; padding-left: .15rem; padding-right: .15rem; font-size: .88rem; }
 .cizelge thead .kisa { font-size: .78rem; line-height: 1.2; }
-.cizelge .yazi { min-width: 170px; max-width: none; }
+.cizelge .yazi { min-width: 300px; max-width: none; }
 .cizelge td.yazi { text-align: left; padding-left: .7rem; }
-.duzen .cizelge .kisa { min-width: 84px; width: 84px; }
-.duzen .cizelge .yazi { min-width: 240px; }
+.duzen .cizelge .kisa { min-width: 76px; width: 76px; }
+.duzen .cizelge .yazi { min-width: 340px; }
 .duzen .cizelge td.yazi input { text-align: left; padding-left: .6rem; }
