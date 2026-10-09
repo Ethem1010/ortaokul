@@ -465,10 +465,23 @@ let taslak = null; // düzenlenmekte olan tablonun henüz kaydedilmemiş hali
 
 // Sütun genişliği: adı saat/süre olan sütunlar dar tutulur ki yazı yazılan sütuna (ör. Program) yer kalsın.
 const kisaSutun = (ad) => /saat|süre|sure/i.test(ad || '');
-function en(c, j) {
+function en(c, j, metin = '') {
   if (!c.sutunlar.some(kisaSutun)) return '';
-  return kisaSutun(c.sutunlar[j]) ? ' class="kisa"' : ' class="yazi"';
+  if (kisaSutun(c.sutunlar[j])) return ' class="kisa"';
+  return String(metin).length > 70 ? ' class="yazi cok-uzun"' : ' class="yazi"';
 }
+// Düzenleme ekranında yazı sütunları, içine yazılan en uzun yazıya göre kendiliğinden genişler.
+function genislikAyarla() {
+  const form = document.querySelector('form[data-form=cizelge]');
+  if (!form) return;
+  form.querySelectorAll('thead tr:first-child th.yazi').forEach((baslik) => {
+    const j = baslik.cellIndex;
+    let enUzun = baslik.querySelector('input').value.length;
+    form.querySelectorAll(`tbody tr td:nth-child(${j + 1}) input`).forEach((el) => { enUzun = Math.max(enUzun, el.value.length); });
+    baslik.style.minWidth = `max(340px, calc(${Math.min(enUzun, 90)}ch + 2.4rem))`;
+  });
+}
+document.addEventListener('input', (olay) => { if (olay.target.closest('form[data-form=cizelge]')) genislikAyarla(); });
 
 function cizelgeSayfasi(slug, q) {
   const tablolar = D.cizelgeler[slug];
@@ -480,7 +493,7 @@ function cizelgeSayfasi(slug, q) {
     <div class="cizelge-baslik">${e(c.baslik)}</div>
     <div class="cizelge-kaydir"><table class="cizelge">
       <thead><tr>${c.sutunlar.map((s, j) => `<th${en(c, j)}>${e(s)}</th>`).join('')}</tr></thead>
-      <tbody>${c.satirlar.map((r) => `<tr>${r.map((h, j) => (j === 0 ? `<th${en(c, j)}>${e(h)}</th>` : `<td${en(c, j)}>${e(h)}</td>`)).join('')}</tr>`).join('')}</tbody>
+      <tbody>${c.satirlar.map((r) => `<tr>${r.map((h, j) => (j === 0 ? `<th${en(c, j, h)}>${e(h)}</th>` : `<td${en(c, j, h)}>${e(h)}</td>`)).join('')}</tr>`).join('')}</tbody>
     </table></div>
     <div class="cizelge-islem"><a class="mini" href="#/${slug}?duzenle=${c.id}">Düzenle</a><button class="mini kotu" data-islem="c-sil" data-slug="${slug}" data-id="${c.id}">Tabloyu sil</button></div>
   </section>`;
@@ -577,7 +590,7 @@ function ayarlarSayfasi() {
     <div class="dugmeler"><button class="dugme">Kaydet</button></div>
   </form>
   <div class="kart"><h2>Hakkında</h2>
-    <p class="soluk">Bu uygulama internete veri göndermez; ilk açılıştan sonra internetsiz çalışır. Giriş şifresi yoktur — telefonunuzun kendi ekran kilidi korur.</p>
+    <p class="soluk"><b>Sürüm 10</b> · Bu uygulama internete veri göndermez; ilk açılıştan sonra internetsiz çalışır. Giriş şifresi yoktur — telefonunuzun kendi ekran kilidi korur.</p>
   </div>`;
 }
 
@@ -768,6 +781,7 @@ function ciz() {
   icerik.innerHTML = bildirim + html;
   menuleriCiz(yol);
   formHazirla();
+  genislikAyarla();
 }
 
 window.addEventListener('hashchange', () => { ciz(); window.scrollTo(0, 0); });
