@@ -210,3 +210,21 @@ h2.kisi { margin-top: .4rem; font-size: 1.2rem; }
 /* ---- Telefon sürümü ekleri ---- */
 .bildirim.uyari { background: var(--orta-z); color: var(--orta); font-weight: 400; }
 .bildirim .mini { margin: .4rem 0 0; display: flex; }
+
+/* ---- Program tabloları (Excel görünümü) ---- */
+.cizelge-kart { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 12px; box-shadow: var(--golge); margin-bottom: 1.1rem; overflow: hidden; }
+.cizelge-baslik { background: var(--bekle); color: var(--kart); font-weight: 700; text-align: center; letter-spacing: .04em; padding: .55rem .8rem; }
+.cizelge-kaydir { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.cizelge { border-collapse: collapse; width: 100%; font-size: .93rem; }
+.cizelge th, .cizelge td { border: 1px solid var(--cizgi); padding: .55rem .5rem; height: 2.4rem; text-align: center; min-width: 64px; max-width: 260px; overflow-wrap: normal; word-break: normal; }
+.cizelge thead th { background: var(--orta-z); color: var(--yazi); font-weight: 700; }
+.cizelge tbody th { background: var(--iyi-z); font-weight: 700; position: sticky; left: 0; }
+.cizelge tbody td { background: color-mix(in srgb, var(--iyi-z) 55%, var(--kart)); }
+.cizelge-islem { display: flex; gap: .5rem; padding: .6rem .8rem; border-top: 1px solid var(--cizgi); }
+.cizelge-kart.duzen { padding: 1rem; overflow: visible; }
+.cizelge-ad { display: flex; flex-direction: column; gap: .25rem; font-size: .82rem; font-weight: 600; color: var(--soluk); margin-bottom: .4rem; }
+.duzen .cizelge th, .duzen .cizelge td { padding: .25rem; min-width: 132px; background: none; border-color: transparent; position: static; }
+.duzen .cizelge thead input { font-weight: 700; background: var(--orta-z); }
+.duzen .cizelge input { text-align: center; padding: .4rem .3rem; }
+.duzen .cizelge .dar { min-width: 0; width: 44px; }
+.duzen .sil-satiri .mini { min-height: 28px; font-size: .75rem; padding: 0 .45rem; }

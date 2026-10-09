@@ -44,33 +44,6 @@ const TANIMLAR = {
       { ad: 'notlar', etiket: 'Notlar', tip: 'uzun' },
     ],
   },
-  'gunluk-program': {
-    tablo: 'gunluk_program', baslik: 'Günlük Program', tekil: 'Program kaydı', durumAlani: 'durum', tamamDegeri: 'Tamamlandı', saatli: true,
-    alanlar: [
-      { ad: 'tarih', etiket: 'Tarih', tip: 'tarih', zorunlu: true },
-      { ad: 'saat', etiket: 'Saat', tip: 'saat' },
-      { ad: 'ders', etiket: 'Ders', tip: 'metin', oneri: 'dersler', zorunlu: true },
-      { ad: 'konu', etiket: 'Konu', tip: 'metin' },
-      { ad: 'calisma', etiket: 'Yapılacak çalışma', tip: 'uzun' },
-      { ad: 'hedef_soru', etiket: 'Hedeflenen soru', tip: 'sayi' },
-      { ad: 'gercek_soru', etiket: 'Gerçekleştirilen soru', tip: 'sayi' },
-      { ad: 'durum', etiket: 'Tamamlanma durumu', tip: 'secim', secenekler: DURUM },
-      { ad: 'ogretmen_notu', etiket: 'Öğretmen notu', tip: 'uzun' },
-    ],
-  },
-  'takviye-ders': {
-    tablo: 'takviye_ders', baslik: 'Takviye Ders', tekil: 'Takviye dersi', durumAlani: 'katilim', tamamDegeri: 'Katıldı', saatli: true,
-    alanlar: [
-      { ad: 'tarih', etiket: 'Tarih', tip: 'tarih', zorunlu: true },
-      { ad: 'ders', etiket: 'Ders', tip: 'metin', oneri: 'dersler', zorunlu: true },
-      { ad: 'konu', etiket: 'Konu', tip: 'metin' },
-      { ad: 'saat', etiket: 'Saat', tip: 'saat' },
-      { ad: 'ogretmen', etiket: 'Öğretmen', tip: 'metin', oneri: 'onceki' },
-      { ad: 'islenen_konular', etiket: 'İşlenen konular', tip: 'uzun' },
-      { ad: 'katilim', etiket: 'Katılım durumu', tip: 'secim', secenekler: ['Planlandı', 'Katıldı', 'Geç katıldı', 'İzinli', 'Katılmadı'] },
-      { ad: 'aciklama', etiket: 'Açıklamalar', tip: 'uzun' },
-    ],
-  },
   'odev-takip': {
     tablo: 'odev', baslik: 'Ödev Takip', tekil: 'Ödev', durumAlani: 'durum', tamamDegeri: 'Tamamlandı',
     alanlar: [
@@ -100,22 +73,20 @@ const TANIMLAR = {
       { ad: 'degerlendirme', etiket: 'Öğretmen değerlendirmesi', tip: 'uzun' },
     ],
   },
-  'nehari-program': {
-    tablo: 'nehari', baslik: 'Nehari Günlük Program', tekil: 'Nehari kaydı', durumAlani: 'durum', tamamDegeri: 'Tamamlandı', saatli: true,
-    alanlar: [
-      { ad: 'tarih', etiket: 'Tarih', tip: 'tarih', zorunlu: true },
-      { ad: 'saat', etiket: 'Saat', tip: 'saat' },
-      { ad: 'faaliyet', etiket: 'Faaliyet', tip: 'metin', oneri: 'faaliyetler', zorunlu: true },
-      { ad: 'calisma', etiket: 'Yapılacak çalışma', tip: 'uzun' },
-      { ad: 'hedef', etiket: 'Hedef', tip: 'metin' },
-      { ad: 'gerceklesen', etiket: 'Gerçekleştirilen çalışma', tip: 'uzun' },
-      { ad: 'durum', etiket: 'Tamamlanma durumu', tip: 'secim', secenekler: DURUM },
-      { ad: 'aciklama', etiket: 'Açıklama', tip: 'uzun' },
-    ],
-  },
 };
 const TAKIP_SAYFALARI = ['gunluk-program', 'takviye-ders', 'odev-takip', 'test-cozum', 'nehari-program'];
 const TABLOLAR = Object.values(TANIMLAR).map((t) => t.tablo);
+const SAYFA_BASLIK = { 'gunluk-program': 'Günlük Program', 'takviye-ders': 'Takviye Ders', 'odev-takip': 'Ödev Takip', 'test-cozum': 'Test Çözüm Takip', 'nehari-program': 'Nehari Günlük Program' };
+
+// Program sayfaları (Günlük Program, Takviye Ders, Nehari) öğrenci kaydı değildir:
+// öğretmenin Excel gibi doldurup bıraktığı, istediğinde değiştirdiği serbest tablolardır.
+// Aşağıdakiler yalnızca ilk açılışta gelen başlangıç şablonlarıdır; her şeyi değiştirilebilir.
+const HAFTA_ICI = ['PAZARTESİ', 'SALI', 'ÇARŞAMBA', 'PERŞEMBE', 'CUMA'];
+const CIZELGE_SABLON = {
+  'gunluk-program': { baslik: 'GÜNLÜK PROGRAM', sutunlar: ['Başlama Saati', 'Bitiş Saati', 'Süre', 'Program'], satirlar: Array.from({ length: 15 }, () => ['', '', '', '']) },
+  'takviye-ders': { baslik: 'TAKVİYE DERS', sutunlar: ['Sınıfı', '6. Sınıf', '7. Sınıf'], satirlar: HAFTA_ICI.map((g) => [g, '', '']) },
+  'nehari-program': { baslik: 'NEHARİ GÜNLÜK PROGRAM', sutunlar: ['Saat', 'Faaliyet', 'Açıklama'], satirlar: [1, 2, 3, 4, 5].map(() => ['', '', '']) },
+};
 const KISA = { 'gunluk-program': 'Günlük', 'takviye-ders': 'Takviye', 'odev-takip': 'Ödev', 'test-cozum': 'Test', 'nehari-program': 'Nehari' };
 
 // =====================================================================
@@ -167,6 +138,16 @@ function veriDuzelt(v) {
   for (const t of TABLOLAR) if (!Array.isArray(d[t])) d[t] = [];
   const enBuyuk = Math.max(0, ...TABLOLAR.flatMap((t) => d[t].map((k) => Number(k.id) || 0)));
   d.sayac = Math.max(Number(d.sayac) || 0, enBuyuk);
+  // Program tabloları: hiç yoksa şablondan oluştur (kullanıcı hepsini sildiyse boş kalır).
+  if (!d.cizelgeler || typeof d.cizelgeler !== 'object') d.cizelgeler = {};
+  for (const [slug, sablon] of Object.entries(CIZELGE_SABLON)) {
+    if (!Array.isArray(d.cizelgeler[slug])) d.cizelgeler[slug] = [{ id: ++d.sayac, ...JSON.parse(JSON.stringify(sablon)) }];
+  }
+  // Önceki sürümün Günlük Program şablonu (Saat / 6. Sınıf / 7. Sınıf) hiç doldurulmadıysa yeni düzene çevir.
+  const g = d.cizelgeler['gunluk-program'];
+  if (g.length === 1 && g[0].sutunlar.join('|') === 'Saat|6. Sınıf|7. Sınıf' && g[0].satirlar.every((r) => !r.slice(1).some(Boolean))) {
+    g[0] = { id: g[0].id, ...JSON.parse(JSON.stringify(CIZELGE_SABLON['gunluk-program'])) };
+  }
   return d;
 }
 const ogrenciler = () => [...D.ogrenciler].sort((a, b) => a.ad_soyad.localeCompare(b.ad_soyad, 'tr'));
@@ -181,14 +162,11 @@ function ozet(bas, bit, ogrenciId) {
   const topla = (liste, alan) => liste.reduce((s, k) => s + (Number(k[alan]) || 0), 0);
   const say = (liste, kosul) => liste.filter(kosul).length;
   const gun = bugun();
-  const p = sec('gunluk_program'), o = sec('odev'), t = sec('test'), tk = sec('takviye_ders'), n = sec('nehari');
+  const o = sec('odev'), t = sec('test');
   return {
-    program: { n: p.length, tamam: say(p, (k) => k.durum === 'Tamamlandı'), hedef: topla(p, 'hedef_soru'), gercek: topla(p, 'gercek_soru') },
     odev: { n: o.length, tamam: say(o, (k) => k.durum === 'Tamamlandı'), kontrol: say(o, (k) => k.kontrol === 'Kontrol edildi'),
       geciken: say(o, (k) => k.durum !== 'Tamamlandı' && k.son_teslim && k.son_teslim < gun) },
     test: { n: t.length, soru: topla(t, 'toplam'), dogru: topla(t, 'dogru'), yanlis: topla(t, 'yanlis'), bos: topla(t, 'bos'), net: topla(t, 'net') },
-    takviye: { n: say(tk, (k) => k.katilim !== 'Planlandı'), tamam: say(tk, (k) => k.katilim === 'Katıldı' || k.katilim === 'Geç katıldı') },
-    nehari: { n: n.length, tamam: say(n, (k) => k.durum === 'Tamamlandı') },
   };
 }
 function dersBazinda(bas, bit, ogrenciId) {
@@ -239,7 +217,7 @@ function menuleriCiz(yol) {
   const aktif = (y) => (yol === y || (y !== '/' && yol.startsWith(y)) ? ' class="aktif"' : '');
   const bag = (y, ad, ik) => `<a href="#${y}"${aktif(y)}>${ikon(IKON[ik])}<span>${ad}</span></a>`;
   const yonetim = bag('/ogrenciler', 'Öğrenciler', 'ogrenciler') + bag('/ilerleme', 'İlerleme', 'ilerleme') + bag('/ayarlar', 'Ayarlar', 'ayarlar');
-  document.getElementById('yanMenu').innerHTML = bag('/', 'Ana Sayfa', 'ana') + '<p>Takip</p>' + TAKIP_SAYFALARI.map((s) => bag('/' + s, TANIMLAR[s].baslik, s)).join('') + '<p>Yönetim</p>' + yonetim;
+  document.getElementById('yanMenu').innerHTML = bag('/', 'Ana Sayfa', 'ana') + '<p>Takip</p>' + TAKIP_SAYFALARI.map((s) => bag('/' + s, SAYFA_BASLIK[s], s)).join('') + '<p>Yönetim</p>' + yonetim;
   document.getElementById('ustMenu').innerHTML = yonetim;
   document.getElementById('altMenu').innerHTML = TAKIP_SAYFALARI.map((s) => bag('/' + s, KISA[s], s)).join('');
 }
@@ -375,7 +353,7 @@ function formSayfasi(slug, kayit, hatalar, yeni) {
 
 const iosSafariSekmesi = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !navigator.standalone;
 function yedekUyarisi() {
-  const kayitVar = TABLOLAR.some((t) => D[t].length);
+  const kayitVar = TABLOLAR.some((t) => D[t].length) || Object.entries(D.cizelgeler).some(([slug, l]) => JSON.stringify(l.map(({ id, ...c }) => c)) !== JSON.stringify([CIZELGE_SABLON[slug]]));
   if (!kayitVar) return '';
   const son = D.ayarlar.son_yedek;
   const gun = son ? Math.round((tarihCoz(bugun()) - tarihCoz(son)) / 86400000) : null;
@@ -384,22 +362,26 @@ function yedekUyarisi() {
 }
 
 function anaSayfa() {
-  const gun = bugun(), g = ozet(gun, gun), h = ozet(...haftaAraligi(gun));
+  const gun = bugun(), h = ozet(...haftaAraligi(gun));
   const bekleyen = D.odev.filter((k) => k.durum !== 'Tamamlandı');
   const geciken = bekleyen.filter((k) => k.son_teslim && k.son_teslim < gun).length;
+  const kontrolsuz = D.odev.filter((k) => k.kontrol !== 'Kontrol edildi').length;
+  const basari = yuzde(h.test.dogru, h.test.soru);
   const kutu = (ad, deger, alt, y, bag) => `<a class="kart olcu" href="#${bag}"><span>${ad}</span><b>${deger}</b>${y === undefined ? '' : cubuk(y)}<small>${alt}</small></a>`;
   return `${iosSafariSekmesi() ? '<div class="bildirim uyari"><b>Önce ana ekrana ekleyin.</b> Alttaki Paylaş düğmesi → “Ana Ekrana Ekle”. Sonra uygulamayı hep ana ekrandaki simgeden açın; Safari\'de girilen kayıtlar simgeden açılan uygulamada görünmez.</div>' : ''}
   ${yedekUyarisi()}
   <div class="baslik"><div><h1>Bugün</h1><p class="soluk">${gunAdi(gun)}, ${trTarih(gun)} · ${D.ogrenciler.length} öğrenci</p></div></div>
-  ${D.ogrenciler.length === 0 ? '<div class="bos-durum"><p>Başlamak için ilk öğrencinizi ekleyin.</p><a class="dugme" href="#/ogrenciler/yeni">＋ Öğrenci ekle</a></div>' : ''}
+  ${D.ogrenciler.length === 0 ? '<div class="bos-durum"><p>Ödev ve test takibi için önce öğrencilerinizi ekleyin.</p><a class="dugme" href="#/ogrenciler/yeni">＋ Öğrenci ekle</a></div>' : ''}
   <div class="olculer">
-    ${kutu('Günlük program', oran(g.program.tamam, g.program.n), 'bugün tamamlanan', yuzde(g.program.tamam, g.program.n), `/gunluk-program?bas=${gun}&bit=${gun}`)}
-    ${kutu('Nehari program', oran(g.nehari.tamam, g.nehari.n), 'bugün tamamlanan', yuzde(g.nehari.tamam, g.nehari.n), `/nehari-program?bas=${gun}&bit=${gun}`)}
     ${kutu('Bekleyen ödev', bekleyen.length, geciken ? `${geciken} tanesi gecikmiş` : 'geciken yok', undefined, '/odev-takip?durum=eksik')}
-    ${kutu('Bu hafta test', h.test.soru + ' soru', `${h.test.n} test · ${sayiYaz(yuvarla(h.test.net)) || 0} net`, undefined, '/ilerleme')}
+    ${kutu('Kontrol edilecek ödev', kontrolsuz, 'henüz kontrol edilmedi', undefined, '/odev-takip')}
+    ${kutu('Bu hafta test', h.test.soru + ' soru', `${h.test.n} test · ${sayiYaz(yuvarla(h.test.net)) || 0} net`, undefined, '/test-cozum')}
+    ${kutu('Bu hafta doğru oranı', basari === null ? '—' : '%' + basari, `${h.test.dogru} D / ${h.test.yanlis} Y / ${h.test.bos} B`, basari ?? 0, '/ilerleme')}
   </div>
   <h2>Hızlı ekle</h2>
-  <div class="hizli">${TAKIP_SAYFALARI.map((s) => `<a class="dugme ikincil" href="#/${s}/yeni">${ikon(IKON[s])} ${e(KISA[s])}</a>`).join('')}</div>`;
+  <div class="hizli">${['odev-takip', 'test-cozum'].map((s) => `<a class="dugme ikincil" href="#/${s}/yeni">${ikon(IKON[s])} ${e(KISA[s])} ekle</a>`).join('')}</div>
+  <h2>Programlar</h2>
+  <div class="hizli">${Object.keys(CIZELGE_SABLON).map((s) => `<a class="dugme sade" href="#/${s}">${ikon(IKON[s])} ${e(SAYFA_BASLIK[s])}</a>`).join('')}</div>`;
 }
 
 function donemAdi(bas, bit, donem) {
@@ -417,8 +399,16 @@ function ilerlemeSayfasi(q) {
   const ogrenci = tumOgrenciler.find((o) => String(o.id) === q.ogrenci) || null;
   const bag = (p) => '#/ilerleme' + sorguYap({ donem, tarih: bas, ogrenci: ogrenci ? ogrenci.id : '', ...p });
   const oranHucre = (tamam, n) => (n > 0 ? `<div class="oran"><span>${tamam}/${n}</span>${cubuk(yuzde(tamam, n))}</div>` : cizgi);
+  const yuzdeHucre = (pay, payda) => (payda > 0 ? `<div class="oran"><span>%${yuzde(pay, payda)}</span>${cubuk(yuzde(pay, payda))}</div>` : cizgi);
   const net = (n) => sayiYaz(yuvarla(n)) || '0';
-  const soru = (z) => (z.program.hedef || z.program.gercek ? `<div>${z.program.gercek}/${z.program.hedef}</div>` : cizgi);
+  const satirHucreleri = (z) => `
+      <td data-etiket="Ödev (yapılan)">${oranHucre(z.odev.tamam, z.odev.n)}</td>
+      <td data-etiket="Ödev (kontrol edilen)">${oranHucre(z.odev.kontrol, z.odev.n)}</td>
+      <td data-etiket="Test" class="sayi">${z.test.n ? `<div>${z.test.n}</div>` : cizgi}</td>
+      <td data-etiket="Test sorusu" class="sayi">${z.test.soru ? `<div>${z.test.soru}</div>` : cizgi}</td>
+      <td data-etiket="Net" class="sayi">${z.test.n ? `<div>${net(z.test.net)}</div>` : cizgi}</td>
+      <td data-etiket="Doğru oranı">${yuzdeHucre(z.test.dogru, z.test.soru)}</td>`;
+  const basliklar = '<th>Ödev (yapılan)</th><th>Ödev (kontrol edilen)</th><th>Test</th><th>Test sorusu</th><th>Net</th><th>Doğru oranı</th>';
 
   const ust = `<div class="baslik"><h1>İlerleme</h1></div>
   <form class="filtre" data-form="filtre" data-yol="/ilerleme">
@@ -430,16 +420,9 @@ function ilerlemeSayfasi(q) {
   if (!tumOgrenciler.length) return ust + '<div class="bos-durum"><p>Henüz öğrenci eklenmemiş.</p></div>';
 
   if (!ogrenci) {
-    const satir = tumOgrenciler.map((o) => { const z = ozet(bas, bit, o.id); return `<tr>
-      <td data-etiket="Öğrenci" class="kim"><a href="${bag({ ogrenci: o.id })}">${e(o.ad_soyad)}</a></td>
-      <td data-etiket="Günlük program">${oranHucre(z.program.tamam, z.program.n)}</td>
-      <td data-etiket="Soru (yapılan/hedef)">${soru(z)}</td>
-      <td data-etiket="Ödev">${oranHucre(z.odev.tamam, z.odev.n)}</td>
-      <td data-etiket="Test sorusu" class="sayi">${z.test.soru || cizgi}</td>
-      <td data-etiket="Net" class="sayi">${z.test.n ? net(z.test.net) : cizgi}</td>
-      <td data-etiket="Takviye katılım">${oranHucre(z.takviye.tamam, z.takviye.n)}</td>
-      <td data-etiket="Nehari">${oranHucre(z.nehari.tamam, z.nehari.n)}</td></tr>`; }).join('');
-    return ust + `<div class="tablo-kutu"><table class="kayitlar"><thead><tr><th>Öğrenci</th><th>Günlük program</th><th>Soru (yapılan/hedef)</th><th>Ödev</th><th>Test sorusu</th><th>Net</th><th>Takviye katılım</th><th>Nehari</th></tr></thead><tbody>${satir}</tbody></table></div>
+    const satir = tumOgrenciler.map((o) => `<tr>
+      <td data-etiket="Öğrenci" class="kim"><a href="${bag({ ogrenci: o.id })}">${e(o.ad_soyad)}</a></td>${satirHucreleri(ozet(bas, bit, o.id))}</tr>`).join('');
+    return ust + `<div class="tablo-kutu"><table class="kayitlar"><thead><tr><th>Öğrenci</th>${basliklar}</tr></thead><tbody>${satir}</tbody></table></div>
     <p class="soluk">Ayrıntı için öğrencinin adına dokunun.</p>`;
   }
 
@@ -452,44 +435,126 @@ function ilerlemeSayfasi(q) {
   };
   const kutu = (ad, deger, alt, y, farkHtml) => `<div class="kart olcu"><span>${ad}</span><b>${deger}</b>${y === undefined ? '' : cubuk(y)}<small>${alt}</small>${farkHtml || ''}</div>`;
   const yz = (a) => yuzde(a.tamam, a.n);
-  const basari = yuzde(z.test.dogru, z.test.soru);
+  const kontrolY = yuzde(z.odev.kontrol, z.odev.n);
+  const basari = yuzde(z.test.dogru, z.test.soru), oncekiBasari = yuzde(p.test.dogru, p.test.soru);
   const kutular = `<div class="olculer">
-    ${kutu('Günlük program', yz(z.program) === null ? '—' : '%' + yz(z.program), `${z.program.tamam}/${z.program.n} çalışma tamamlandı`, yz(z.program), fark(yz(z.program), yz(p.program), ' puan'))}
-    ${kutu('Çözülen soru (program)', z.program.gercek, `hedef ${z.program.hedef}`, yuzde(Math.min(z.program.gercek, z.program.hedef), z.program.hedef), fark(z.program.gercek, p.program.gercek, ' soru'))}
-    ${kutu('Ödev', yz(z.odev) === null ? '—' : '%' + yz(z.odev), `${z.odev.tamam}/${z.odev.n} tamamlandı · ${z.odev.kontrol} kontrol edildi${z.odev.geciken ? ` · ${z.odev.geciken} gecikmiş` : ''}`, yz(z.odev), fark(yz(z.odev), yz(p.odev), ' puan'))}
-    ${kutu('Test neti', z.test.n ? net(z.test.net) : '—', `${z.test.n} test · ${z.test.soru} soru · ${z.test.dogru} D / ${z.test.yanlis} Y / ${z.test.bos} B${basari === null ? '' : ` · %${basari} doğru`}`, undefined, z.test.n || p.test.n ? fark(z.test.net, p.test.net, ' net') : '')}
-    ${kutu('Takviye katılım', oran(z.takviye.tamam, z.takviye.n), 'katıldığı / yapılan ders', yz(z.takviye))}
-    ${kutu('Nehari program', yz(z.nehari) === null ? '—' : '%' + yz(z.nehari), `${z.nehari.tamam}/${z.nehari.n} faaliyet tamamlandı`, yz(z.nehari), fark(yz(z.nehari), yz(p.nehari), ' puan'))}
+    ${kutu('Ödev (yapılan)', yz(z.odev) === null ? '—' : '%' + yz(z.odev), `${z.odev.tamam}/${z.odev.n} ödev tamamlandı${z.odev.geciken ? ` · ${z.odev.geciken} gecikmiş` : ''}`, yz(z.odev), fark(yz(z.odev), yz(p.odev), ' puan'))}
+    ${kutu('Ödev (kontrol edilen)', kontrolY === null ? '—' : '%' + kontrolY, `${z.odev.kontrol}/${z.odev.n} ödev kontrol edildi`, kontrolY ?? 0)}
+    ${kutu('Test neti', z.test.n ? net(z.test.net) : '—', `${z.test.n} test · ${z.test.soru} soru · ${z.test.dogru} D / ${z.test.yanlis} Y / ${z.test.bos} B`, undefined, z.test.n || p.test.n ? fark(z.test.net, p.test.net, ' net') : '')}
+    ${kutu('Doğru oranı', basari === null ? '—' : '%' + basari, 'doğru / toplam soru', basari ?? 0, fark(basari, oncekiBasari, ' puan'))}
   </div>`;
   const ad = donem === 'hafta' ? 'Gün' : 'Hafta';
   const dilimTablo = `<h2>${donem === 'hafta' ? 'Gün gün' : 'Hafta hafta'}</h2>
-  <div class="tablo-kutu"><table class="kayitlar"><thead><tr><th>${ad}</th><th>Günlük program</th><th>Soru (yapılan/hedef)</th><th>Ödev</th><th>Test sorusu</th><th>Net</th><th>Nehari</th></tr></thead><tbody>
-  ${dilimler(bas, bit, donem).map(([b, s]) => { const d = ozet(b, s, ogrenci.id); const dolu = d.program.n + d.odev.n + d.test.n + d.nehari.n; return `<tr${dolu ? '' : ' class="sessiz"'}>
-    <td data-etiket="${ad}" class="kim"><div>${donem === 'hafta' ? `${gunAdi(b)} <span class="soluk">${trTarih(b).slice(0, 5)}</span>` : `${trTarih(b).slice(0, 5)} – ${trTarih(s).slice(0, 5)}`}${dolu ? '' : ' <span class="soluk yok">· kayıt yok</span>'}</div></td>
-    <td data-etiket="Günlük program">${oranHucre(d.program.tamam, d.program.n)}</td>
-    <td data-etiket="Soru (yapılan/hedef)">${soru(d)}</td>
-    <td data-etiket="Ödev">${oranHucre(d.odev.tamam, d.odev.n)}</td>
-    <td data-etiket="Test sorusu" class="sayi">${d.test.soru || cizgi}</td>
-    <td data-etiket="Net" class="sayi">${d.test.n ? net(d.test.net) : cizgi}</td>
-    <td data-etiket="Nehari">${oranHucre(d.nehari.tamam, d.nehari.n)}</td></tr>`; }).join('')}
+  <div class="tablo-kutu"><table class="kayitlar"><thead><tr><th>${ad}</th>${basliklar}</tr></thead><tbody>
+  ${dilimler(bas, bit, donem).map(([b, s]) => { const d = ozet(b, s, ogrenci.id); const dolu = d.odev.n + d.test.n; return `<tr${dolu ? '' : ' class="sessiz"'}>
+    <td data-etiket="${ad}" class="kim"><div>${donem === 'hafta' ? `${gunAdi(b)} <span class="soluk">${trTarih(b).slice(0, 5)}</span>` : `${trTarih(b).slice(0, 5)} – ${trTarih(s).slice(0, 5)}`}${dolu ? '' : ' <span class="soluk yok">· kayıt yok</span>'}</div></td>${satirHucreleri(d)}</tr>`; }).join('')}
   </tbody></table></div>`;
   const dersler = dersBazinda(bas, bit, ogrenci.id);
   const dersTablo = dersler.length ? `<h2>Derslere göre test başarısı</h2>
   <div class="tablo-kutu"><table class="kayitlar"><thead><tr><th>Ders</th><th>Test</th><th>Soru</th><th>Doğru</th><th>Yanlış</th><th>Boş</th><th>Net</th><th>Doğru oranı</th></tr></thead><tbody>
   ${dersler.map((d) => `<tr><td data-etiket="Ders" class="kim">${e(d.ders)}</td><td data-etiket="Test" class="sayi">${d.n}</td><td data-etiket="Soru" class="sayi">${d.soru}</td>
     <td data-etiket="Doğru" class="sayi">${d.dogru}</td><td data-etiket="Yanlış" class="sayi">${d.yanlis}</td><td data-etiket="Boş" class="sayi">${d.bos}</td>
-    <td data-etiket="Net" class="sayi">${net(d.net)}</td><td data-etiket="Doğru oranı"><div class="oran"><span>%${yuzde(d.dogru, d.soru) ?? 0}</span>${cubuk(yuzde(d.dogru, d.soru))}</div></td></tr>`).join('')}
+    <td data-etiket="Net" class="sayi">${net(d.net)}</td><td data-etiket="Doğru oranı">${yuzdeHucre(d.dogru, d.soru)}</td></tr>`).join('')}
   </tbody></table></div>` : '';
   return ust + `<h2 class="kisi">${e(ogrenci.ad_soyad)}${ogrenci.sinif ? ` <span class="soluk">· ${e(ogrenci.sinif)}</span>` : ''}</h2>` + kutular + dilimTablo + dersTablo;
 }
 
+// ---- Program tabloları (Excel gibi serbest tablolar) ----
+const EN_COK_SUTUN = 12, EN_COK_SATIR = 60;
+let taslak = null; // düzenlenmekte olan tablonun henüz kaydedilmemiş hali
+
+function cizelgeSayfasi(slug, q) {
+  const tablolar = D.cizelgeler[slug];
+  const duzenlenen = q.duzenle ? tablolar.find((c) => String(c.id) === q.duzenle) : null;
+  if (!duzenlenen) taslak = null;
+  else if (!taslak || taslak.id !== duzenlenen.id) taslak = { slug, ...JSON.parse(JSON.stringify(duzenlenen)) };
+
+  const goster = (c) => `<section class="cizelge-kart">
+    <div class="cizelge-baslik">${e(c.baslik)}</div>
+    <div class="cizelge-kaydir"><table class="cizelge">
+      <thead><tr>${c.sutunlar.map((s) => `<th>${e(s)}</th>`).join('')}</tr></thead>
+      <tbody>${c.satirlar.map((r) => `<tr>${r.map((h, j) => (j === 0 ? `<th>${e(h)}</th>` : `<td>${e(h)}</td>`)).join('')}</tr>`).join('')}</tbody>
+    </table></div>
+    <div class="cizelge-islem"><a class="mini" href="#/${slug}?duzenle=${c.id}">Düzenle</a><button class="mini kotu" data-islem="c-sil" data-slug="${slug}" data-id="${c.id}">Tabloyu sil</button></div>
+  </section>`;
+
+  const duzenle = (c) => `<form class="cizelge-kart duzen" data-form="cizelge" data-slug="${slug}" data-id="${c.id}">
+    <label class="cizelge-ad"><span>Tablo başlığı</span><input type="text" name="baslik" value="${e(c.baslik)}" autocomplete="off"></label>
+    <p class="soluk">Kutulara dokunup yazın. Sütun adları da değiştirilebilir. Tablo sağa doğru kaydırılabilir.</p>
+    <div class="cizelge-kaydir"><table class="cizelge">
+      <thead>
+        <tr>${c.sutunlar.map((s, j) => `<th><input type="text" name="s${j}" value="${e(s)}" aria-label="${j + 1}. sütun adı" autocomplete="off"></th>`).join('')}<th class="dar"></th></tr>
+        <tr class="sil-satiri">${c.sutunlar.map((s, j) => `<td>${c.sutunlar.length > 1 ? `<button type="button" class="mini kotu" data-islem="c-sutun-sil" data-j="${j}">Sütunu sil</button>` : ''}</td>`).join('')}<td class="dar"></td></tr>
+      </thead>
+      <tbody>${c.satirlar.map((r, i) => `<tr>${r.map((h, j) => `<td><input type="text" name="h${i}_${j}" value="${e(h)}" aria-label="${i + 1}. satır, ${e(c.sutunlar[j])}" autocomplete="off"></td>`).join('')}<td class="dar"><button type="button" class="mini kotu" data-islem="c-satir-sil" data-i="${i}" aria-label="${i + 1}. satırı sil">✕</button></td></tr>`).join('')}</tbody>
+    </table></div>
+    <div class="dugmeler">
+      <button type="button" class="dugme ikincil" data-islem="c-satir-ekle">＋ Satır ekle</button>
+      <button type="button" class="dugme ikincil" data-islem="c-sutun-ekle">＋ Sütun ekle</button>
+    </div>
+    <div class="dugmeler"><button class="dugme">Kaydet</button><a class="dugme sade" href="#/${slug}">Vazgeç</a></div>
+  </form>`;
+
+  return `<div class="baslik"><h1>${e(SAYFA_BASLIK[slug])}</h1>${taslak ? '' : `<button class="dugme" data-islem="c-yeni" data-slug="${slug}">＋ Yeni tablo</button>`}</div>
+  ${taslak ? duzenle(taslak) : tablolar.length ? tablolar.map(goster).join('') : '<div class="bos-durum"><p>Henüz tablo yok. “＋ Yeni tablo” ile başlayın.</p></div>'}`;
+}
+
+// Düzenleme formundaki yazılanları taslağa aktarır (satır/sütun eklerken yazılanlar kaybolmasın diye).
+function taslakOku() {
+  const form = document.querySelector('form[data-form=cizelge]');
+  if (!form || !taslak) return;
+  const al = (ad) => { const el = form.elements[ad]; return el ? el.value.trim().slice(0, 300) : ''; };
+  taslak.baslik = al('baslik');
+  taslak.sutunlar = taslak.sutunlar.map((_, j) => al('s' + j));
+  taslak.satirlar = taslak.satirlar.map((r, i) => r.map((_, j) => al(`h${i}_${j}`)));
+}
+function taslakDegistir(is) {
+  taslakOku();
+  is(taslak);
+  const kaydirma = window.scrollY;
+  ciz();
+  window.scrollTo(0, kaydirma);
+}
+const cizelgeIslemleri = {
+  'c-satir-ekle': () => taslakDegistir((c) => { if (c.satirlar.length < EN_COK_SATIR) c.satirlar.push(c.sutunlar.map(() => '')); }),
+  'c-sutun-ekle': () => taslakDegistir((c) => { if (c.sutunlar.length < EN_COK_SUTUN) { c.sutunlar.push('Yeni sütun'); c.satirlar.forEach((r) => r.push('')); } }),
+  'c-satir-sil': (d) => taslakDegistir((c) => { const i = Number(d.dataset.i); if (!c.satirlar[i].some(Boolean) || window.confirm('Bu satır silinsin mi?')) c.satirlar.splice(i, 1); }),
+  'c-sutun-sil': (d) => taslakDegistir((c) => { const j = Number(d.dataset.j); if (window.confirm(`“${c.sutunlar[j]}” sütunu ve içindekiler silinsin mi?`)) { c.sutunlar.splice(j, 1); c.satirlar.forEach((r) => r.splice(j, 1)); } }),
+  'c-yeni': async (d) => {
+    const slug = d.dataset.slug, sablon = JSON.parse(JSON.stringify(CIZELGE_SABLON[slug]));
+    const yeni = { id: ++D.sayac, ...sablon, baslik: D.cizelgeler[slug].length ? 'YENİ TABLO' : sablon.baslik };
+    D.cizelgeler[slug].push(yeni);
+    await kaydet();
+    git(`/${slug}?duzenle=${yeni.id}`);
+  },
+  'c-sil': async (d) => {
+    const slug = d.dataset.slug, id = Number(d.dataset.id), c = D.cizelgeler[slug].find((x) => x.id === id);
+    if (!c || !window.confirm(`“${c.baslik}” tablosu silinecek. Emin misiniz?`)) return;
+    D.cizelgeler[slug] = D.cizelgeler[slug].filter((x) => x.id !== id);
+    await kaydet();
+    mesaj = ['iyi', 'Tablo silindi.'];
+    ciz();
+  },
+};
+async function cizelgeKaydet(form) {
+  taslakOku();
+  const slug = form.dataset.slug, i = D.cizelgeler[slug].findIndex((c) => c.id === Number(form.dataset.id));
+  if (i < 0) { mesaj = ['kotu', 'Tablo bulunamadı (silinmiş olabilir).']; return git('/' + slug); }
+  const { slug: _atla, ...temiz } = taslak;
+  D.cizelgeler[slug][i] = { ...temiz, baslik: temiz.baslik || SAYFA_BASLIK[slug].toLocaleUpperCase('tr') };
+  await kaydet();
+  taslak = null;
+  mesaj = ['iyi', 'Tablo kaydedildi.'];
+  git('/' + slug);
+}
+
 function ayarlarSayfasi() {
   const a = D.ayarlar;
-  const toplam = TABLOLAR.reduce((s, t) => s + D[t].length, 0);
+  const toplam = TABLOLAR.reduce((s, t) => s + D[t].length, 0) + Object.values(D.cizelgeler).reduce((s, l) => s + l.length, 0);
   return `<div class="baslik"><h1>Ayarlar</h1></div>
   <div class="kart"><h2>Yedekleme</h2>
     <p>Veriler <b>yalnızca bu cihazda</b> durur. Telefon bozulur, değişir veya Safari verileri silinirse kaybolmaması için düzenli yedek alın ve dosyayı telefonun dışında bir yerde de saklayın (kendinize e-posta, iCloud Drive, WhatsApp).</p>
-    <p class="soluk">${toplam} kayıt · Son yedek: ${a.son_yedek ? trTarih(a.son_yedek) : 'hiç alınmadı'}</p>
+    <p class="soluk">${toplam} kayıt ve tablo · Son yedek: ${a.son_yedek ? trTarih(a.son_yedek) : 'hiç alınmadı'}</p>
     <button class="dugme" data-islem="yedek">Yedeği kaydet / paylaş</button>
     <h3>Yedekten geri yükle</h3>
     <p class="soluk">Seçtiğiniz yedek, şu anki verilerin <b>yerine</b> geçer. Yeni telefona geçerken de bu kullanılır.</p>
@@ -499,7 +564,6 @@ function ayarlarSayfasi() {
   <form class="kart form" data-form="listeler"><h2>Listeler ve net hesabı</h2>
     <div class="izgara">
       <label class="genis"><span>Dersler (her satıra bir ders — formlarda öneri olarak çıkar)</span><textarea name="dersler" rows="6">${e(a.dersler)}</textarea></label>
-      <label class="genis"><span>Nehari faaliyetleri (her satıra bir faaliyet)</span><textarea name="faaliyetler" rows="5">${e(a.faaliyetler)}</textarea></label>
       <label><span>Net hesabı</span><select name="net_kurali">${secenek(4, '4 yanlış 1 doğruyu götürür', a.net_kurali)}${secenek(3, '3 yanlış 1 doğruyu götürür', a.net_kurali)}${secenek(0, 'Yanlışlar doğruyu götürmez', a.net_kurali)}</select>
         <small>Değişiklik bundan sonra kaydedilen testlere uygulanır.</small></label>
     </div>
@@ -676,9 +740,11 @@ function ciz() {
   const yol = '/' + (slug || '');
   const t = TANIMLAR[slug];
   let html;
+  if (!(CIZELGE_SABLON[slug] && q.duzenle)) taslak = null;
   if (yol === '/') html = anaSayfa();
   else if (yol === '/ilerleme') html = ilerlemeSayfasi(q);
   else if (yol === '/ayarlar') html = ayarlarSayfasi();
+  else if (CIZELGE_SABLON[slug] && !ikinci) html = cizelgeSayfasi(slug, q);
   else if (t && !ikinci) { sonListe[slug] = location.hash.slice(1); html = listeSayfasi(slug, q); }
   else if (t && ikinci === 'yeni') {
     let kayit = { tarih: tarihGecerli(q.tarih) ? q.tarih : bugun(), verilis: bugun(), ogrenci_id: q.ogrenci || '' };
@@ -704,11 +770,11 @@ document.addEventListener('submit', (olay) => {
   if (!form.dataset.form) return;
   olay.preventDefault();
   if (form.dataset.form === 'kayit') kayitGonder(form, olay.submitter).catch(hataGoster);
+  else if (form.dataset.form === 'cizelge') cizelgeKaydet(form).catch(hataGoster);
   else if (form.dataset.form === 'filtre') git(form.dataset.yol + sorguYap(Object.fromEntries(new FormData(form))));
   else if (form.dataset.form === 'listeler') {
     const v = new FormData(form);
     D.ayarlar.dersler = satirlar(v.get('dersler')).join('\n');
-    D.ayarlar.faaliyetler = satirlar(v.get('faaliyetler')).join('\n');
     D.ayarlar.net_kurali = [0, 3, 4].includes(Number(v.get('net_kurali'))) ? Number(v.get('net_kurali')) : 4;
     kaydet().then(() => { mesaj = ['iyi', 'Ayarlar kaydedildi.']; ciz(); window.scrollTo(0, 0); }).catch(hataGoster);
   }
@@ -721,7 +787,7 @@ document.addEventListener('click', (olay) => {
   if (!dugme) return;
   olay.preventDefault();
   const id = Number(dugme.dataset.id), slug = dugme.dataset.slug;
-  const is = { sil: () => sil(slug, id), tamamla: () => tamamla(slug, id), yedek: yedekAl, 'geri-yukle': geriYukle, 'geri-al': geriAl }[dugme.dataset.islem];
+  const is = { sil: () => sil(slug, id), tamamla: () => tamamla(slug, id), yedek: yedekAl, 'geri-yukle': geriYukle, 'geri-al': geriAl }[dugme.dataset.islem] || (cizelgeIslemleri[dugme.dataset.islem] && (() => cizelgeIslemleri[dugme.dataset.islem](dugme)));
   if (is) Promise.resolve(is()).catch(hataGoster);
 });
 

@@ -2,7 +2,7 @@
 // ilk açılıştan sonra internet olmadan da açılır. Öğrenci verilerine dokunmaz.
 // Uygulama dosyalarını güncellediğinizde aşağıdaki sürüm adını değiştirin.
 
-const SURUM = 'ogrenci-takip-v1';
+const SURUM = 'ogrenci-takip-v5';
 const DOSYALAR = ['./', 'index.html', 'stil.css', 'app.js', 'ikon.png', 'ikon-192.png', 'ikon-512.png', 'manifest.webmanifest'];
 
 self.addEventListener('install', (olay) => {
