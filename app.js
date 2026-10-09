@@ -371,17 +371,17 @@ function anaSayfa() {
   return `${iosSafariSekmesi() ? '<div class="bildirim uyari"><b>Önce ana ekrana ekleyin.</b> Alttaki Paylaş düğmesi → “Ana Ekrana Ekle”. Sonra uygulamayı hep ana ekrandaki simgeden açın; Safari\'de girilen kayıtlar simgeden açılan uygulamada görünmez.</div>' : ''}
   ${yedekUyarisi()}
   <div class="baslik"><div><h1>Bugün</h1><p class="soluk">${gunAdi(gun)}, ${trTarih(gun)} · ${D.ogrenciler.length} öğrenci</p></div></div>
-  ${D.ogrenciler.length === 0 ? '<div class="bos-durum"><p>Ödev ve test takibi için önce öğrencilerinizi ekleyin.</p><a class="dugme" href="#/ogrenciler/yeni">＋ Öğrenci ekle</a></div>' : ''}
+  <h2>Programlar</h2>
+  <div class="hizli">${Object.keys(CIZELGE_SABLON).map((s) => `<a class="dugme sade" href="#/${s}">${ikon(IKON[s])} ${e(SAYFA_BASLIK[s])}</a>`).join('')}</div>
+  <h2>Ödev ve test takibi</h2>
+  ${D.ogrenciler.length === 0 ? '<div class="bos-durum"><p>Ödev ve test takibi için öğrencilerinizi ekleyin. (Programlar için öğrenci gerekmez.)</p><a class="dugme" href="#/ogrenciler/yeni">＋ Öğrenci ekle</a></div>' : `
   <div class="olculer">
     ${kutu('Bekleyen ödev', bekleyen.length, geciken ? `${geciken} tanesi gecikmiş` : 'geciken yok', undefined, '/odev-takip?durum=eksik')}
     ${kutu('Kontrol edilecek ödev', kontrolsuz, 'henüz kontrol edilmedi', undefined, '/odev-takip')}
     ${kutu('Bu hafta test', h.test.soru + ' soru', `${h.test.n} test · ${sayiYaz(yuvarla(h.test.net)) || 0} net`, undefined, '/test-cozum')}
     ${kutu('Bu hafta doğru oranı', basari === null ? '—' : '%' + basari, `${h.test.dogru} D / ${h.test.yanlis} Y / ${h.test.bos} B`, basari ?? 0, '/ilerleme')}
   </div>
-  <h2>Hızlı ekle</h2>
-  <div class="hizli">${['odev-takip', 'test-cozum'].map((s) => `<a class="dugme ikincil" href="#/${s}/yeni">${ikon(IKON[s])} ${e(KISA[s])} ekle</a>`).join('')}</div>
-  <h2>Programlar</h2>
-  <div class="hizli">${Object.keys(CIZELGE_SABLON).map((s) => `<a class="dugme sade" href="#/${s}">${ikon(IKON[s])} ${e(SAYFA_BASLIK[s])}</a>`).join('')}</div>`;
+  <div class="hizli" style="margin-top:.8rem">${['odev-takip', 'test-cozum'].map((s) => `<a class="dugme ikincil" href="#/${s}/yeni">${ikon(IKON[s])} ${e(KISA[s])} ekle</a>`).join('')}</div>`}`;
 }
 
 function donemAdi(bas, bit, donem) {
@@ -460,7 +460,7 @@ function ilerlemeSayfasi(q) {
 }
 
 // ---- Program tabloları (Excel gibi serbest tablolar) ----
-const EN_COK_SUTUN = 12, EN_COK_SATIR = 60;
+const EN_COK_SUTUN = 20, EN_COK_SATIR = 200;
 let taslak = null; // düzenlenmekte olan tablonun henüz kaydedilmemiş hali
 
 function cizelgeSayfasi(slug, q) {
