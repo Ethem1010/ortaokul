@@ -463,6 +463,13 @@ function ilerlemeSayfasi(q) {
 const EN_COK_SUTUN = 20, EN_COK_SATIR = 200;
 let taslak = null; // düzenlenmekte olan tablonun henüz kaydedilmemiş hali
 
+// Sütun genişliği: adı saat/süre olan sütunlar dar tutulur ki yazı yazılan sütuna (ör. Program) yer kalsın.
+const kisaSutun = (ad) => /saat|süre|sure/i.test(ad || '');
+function en(c, j) {
+  if (!c.sutunlar.some(kisaSutun)) return '';
+  return kisaSutun(c.sutunlar[j]) ? ' class="kisa"' : ' class="yazi"';
+}
+
 function cizelgeSayfasi(slug, q) {
   const tablolar = D.cizelgeler[slug];
   const duzenlenen = q.duzenle ? tablolar.find((c) => String(c.id) === q.duzenle) : null;
@@ -472,8 +479,8 @@ function cizelgeSayfasi(slug, q) {
   const goster = (c) => `<section class="cizelge-kart">
     <div class="cizelge-baslik">${e(c.baslik)}</div>
     <div class="cizelge-kaydir"><table class="cizelge">
-      <thead><tr>${c.sutunlar.map((s) => `<th>${e(s)}</th>`).join('')}</tr></thead>
-      <tbody>${c.satirlar.map((r) => `<tr>${r.map((h, j) => (j === 0 ? `<th>${e(h)}</th>` : `<td>${e(h)}</td>`)).join('')}</tr>`).join('')}</tbody>
+      <thead><tr>${c.sutunlar.map((s, j) => `<th${en(c, j)}>${e(s)}</th>`).join('')}</tr></thead>
+      <tbody>${c.satirlar.map((r) => `<tr>${r.map((h, j) => (j === 0 ? `<th${en(c, j)}>${e(h)}</th>` : `<td${en(c, j)}>${e(h)}</td>`)).join('')}</tr>`).join('')}</tbody>
     </table></div>
     <div class="cizelge-islem"><a class="mini" href="#/${slug}?duzenle=${c.id}">Düzenle</a><button class="mini kotu" data-islem="c-sil" data-slug="${slug}" data-id="${c.id}">Tabloyu sil</button></div>
   </section>`;
@@ -483,10 +490,10 @@ function cizelgeSayfasi(slug, q) {
     <p class="soluk">Kutulara dokunup yazın. Sütun adları da değiştirilebilir. Tablo sağa doğru kaydırılabilir.</p>
     <div class="cizelge-kaydir"><table class="cizelge">
       <thead>
-        <tr>${c.sutunlar.map((s, j) => `<th><input type="text" name="s${j}" value="${e(s)}" aria-label="${j + 1}. sütun adı" autocomplete="off"></th>`).join('')}<th class="dar"></th></tr>
+        <tr>${c.sutunlar.map((s, j) => `<th><input type="text" name="s${j}" value="${e(s)}" aria-label="${j + 1}. sütun adı" autocomplete="off"></th>`.replace('<th>', `<th${en(c, j)}>`)).join('')}<th class="dar"></th></tr>
         <tr class="sil-satiri">${c.sutunlar.map((s, j) => `<td>${c.sutunlar.length > 1 ? `<button type="button" class="mini kotu" data-islem="c-sutun-sil" data-j="${j}">Sütunu sil</button>` : ''}</td>`).join('')}<td class="dar"></td></tr>
       </thead>
-      <tbody>${c.satirlar.map((r, i) => `<tr>${r.map((h, j) => `<td><input type="text" name="h${i}_${j}" value="${e(h)}" aria-label="${i + 1}. satır, ${e(c.sutunlar[j])}" autocomplete="off"></td>`).join('')}<td class="dar"><button type="button" class="mini kotu" data-islem="c-satir-sil" data-i="${i}" aria-label="${i + 1}. satırı sil">✕</button></td></tr>`).join('')}</tbody>
+      <tbody>${c.satirlar.map((r, i) => `<tr>${r.map((h, j) => `<td><input type="text" name="h${i}_${j}" value="${e(h)}" aria-label="${i + 1}. satır, ${e(c.sutunlar[j])}" autocomplete="off"></td>`.replace('<td>', `<td${en(c, j)}>`)).join('')}<td class="dar"><button type="button" class="mini kotu" data-islem="c-satir-sil" data-i="${i}" aria-label="${i + 1}. satırı sil">✕</button></td></tr>`).join('')}</tbody>
     </table></div>
     <div class="dugmeler">
       <button type="button" class="dugme ikincil" data-islem="c-satir-ekle">＋ Satır ekle</button>
